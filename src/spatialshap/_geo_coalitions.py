@@ -13,6 +13,7 @@ from numpy.typing import NDArray
 from spatialshap._coalitions import exact_shapley_values
 
 FloatArray: TypeAlias = NDArray[np.float64]
+IntArray: TypeAlias = NDArray[np.int_]
 
 
 @dataclass(frozen=True)
@@ -164,7 +165,7 @@ def exact_geo_decomposition(
     if not np.isfinite(values).all():
         raise ValueError("coalition_values must be finite.")
 
-    masks = np.arange(1, expected - 1, dtype=int)
+    masks: IntArray = np.arange(1, expected - 1, dtype=int)
     design: FloatArray = np.vstack(
         [_geo_design_row(int(mask), n_features) for mask in masks]
     )
