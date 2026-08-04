@@ -1,5 +1,6 @@
 """Public plotting interface for SpatialSHAP."""
 
+from spatialshap.plots._geo import component_bar, geo_effect_map, interaction_map
 from spatialshap.plots._local import waterfall
 from spatialshap.plots._maps import (
     baseline_map,
@@ -15,4 +16,7 @@ __all__ = [
     "effect_map",
     "baseline_map",
     "effective_reference_map",
+    "component_bar",
+    "geo_effect_map",
+    "interaction_map",
 ]
