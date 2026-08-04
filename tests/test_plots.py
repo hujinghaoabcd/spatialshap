@@ -3,8 +3,7 @@ import numpy as np
 
 matplotlib.use("Agg")
 
-from spatialshap import Explainer
-from spatialshap import plots
+from spatialshap import Explainer, plots
 
 
 def test_initial_plotting_api_returns_matplotlib_objects():
