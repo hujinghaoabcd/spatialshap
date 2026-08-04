@@ -12,6 +12,14 @@ from spatialshap._references import (
     ReferenceDiagnostics,
 )
 from spatialshap._version import __version__
+from spatialshap.validation import (
+    LinearReferenceSwitchTruth,
+    RecoveryMetrics,
+    bandwidth_sensitivity,
+    geo_recovery_table,
+    linear_reference_switch_truth,
+    recovery_metrics,
+)
 
 __author__ = "Jinghao Hu"
 __license__ = "MIT"
@@ -26,6 +34,12 @@ __all__ = [
     "KernelReference",
     "KNNReference",
     "ReferenceDiagnostics",
+    "RecoveryMetrics",
+    "LinearReferenceSwitchTruth",
+    "recovery_metrics",
+    "linear_reference_switch_truth",
+    "geo_recovery_table",
+    "bandwidth_sensitivity",
     "explain",
     "explain_geo",
     "__version__",
