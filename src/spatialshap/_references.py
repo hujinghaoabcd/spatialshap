@@ -106,8 +106,10 @@ class GlobalReference:
     ) -> tuple[FloatArray, ReferenceDiagnostics]:
         if n_background <= 0:
             raise ValueError("n_background must be positive.")
-        weights = np.full(n_background, 1.0 / n_background, dtype=float)
-        distances = np.zeros(n_background, dtype=float)
+        weights: FloatArray = np.full(
+            n_background, 1.0 / n_background, dtype=float
+        )
+        distances: FloatArray = np.zeros(n_background, dtype=float)
         return weights, _diagnostics(weights, distances)
 
 
@@ -137,8 +139,9 @@ class KernelReference:
             background_geometry,
             n_background,
         )
-        distances = np.linalg.norm(background - focal, axis=1)
+        distances: FloatArray = np.linalg.norm(background - focal, axis=1)
         ratio = distances / self.bandwidth
+        raw: FloatArray
         if self.kernel == "bisquare":
             raw = np.where(ratio < 1.0, np.square(1.0 - np.square(ratio)), 0.0)
         elif self.kernel == "gaussian":
@@ -151,7 +154,7 @@ class KernelReference:
                 "KernelReference selected no positive-weight background rows; "
                 "increase the bandwidth or use KNNReference."
             )
-        weights = np.asarray(raw / total, dtype=float)
+        weights: FloatArray = np.asarray(raw / total, dtype=float)
         return weights, _diagnostics(weights, distances)
 
 
@@ -182,9 +185,9 @@ class KNNReference:
         )
         if self.k > n_background:
             raise ValueError("k cannot exceed the number of background rows.")
-        distances = np.linalg.norm(background - focal, axis=1)
+        distances: FloatArray = np.linalg.norm(background - focal, axis=1)
         order = np.argsort(distances, kind="stable")[: self.k]
-        raw = np.zeros(n_background, dtype=float)
+        raw: FloatArray = np.zeros(n_background, dtype=float)
         if self.distance_weighted:
             selected = distances[order]
             zero = selected == 0
@@ -195,5 +198,5 @@ class KNNReference:
                 raw[order] = inverse / inverse.sum()
         else:
             raw[order] = 1.0 / self.k
-        weights = np.asarray(raw / raw.sum(), dtype=float)
+        weights: FloatArray = np.asarray(raw / raw.sum(), dtype=float)
         return weights, _diagnostics(weights, distances)
