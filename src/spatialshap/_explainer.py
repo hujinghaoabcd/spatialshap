@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, TypeAlias, cast
 
 import numpy as np
 import pandas as pd
@@ -13,8 +13,8 @@ from spatialshap._coalitions import exact_coalition_values, exact_shapley_values
 from spatialshap._explanation import SpatialExplanation
 from spatialshap._references import GlobalReference, Reference, ReferenceDiagnostics
 
-FloatArray = NDArray[np.float64]
-PredictionFunction = Callable[[FloatArray], FloatArray]
+FloatArray: TypeAlias = NDArray[np.float64]
+PredictionFunction: TypeAlias = Callable[[FloatArray], FloatArray]
 
 
 def _as_2d_numeric(values: Any, *, name: str) -> FloatArray:
@@ -41,10 +41,10 @@ def _as_geometry(values: Any | None, *, name: str, n_rows: int) -> FloatArray | 
 
 def _resolve_predict(model: Any) -> PredictionFunction:
     if callable(model):
-        return model
+        return cast(PredictionFunction, model)
     predict = getattr(model, "predict", None)
     if callable(predict):
-        return predict
+        return cast(PredictionFunction, predict)
     raise TypeError("model must be callable or expose a callable predict method.")
 
 
