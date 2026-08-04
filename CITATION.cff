@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: SpatialSHAP
+type: software
+authors:
+  - family-names: Hu
+    given-names: Jinghao
+    email: hujinghao20@mails.ucas.ac.cn
+repository-code: https://github.com/hujinghaoabcd/spatialshap
+license: MIT
+version: 0.0.1
+message: "If you use SpatialSHAP, please cite the software and the associated method paper when available."
