@@ -73,7 +73,7 @@ class SpatialExplanation:
     def shape(self) -> tuple[int, int]:
         """Return ``(n_observations, n_features)``."""
 
-        return self.values.shape
+        return int(self.values.shape[0]), int(self.values.shape[1])
 
     @property
     def additivity_error(self) -> FloatArray:
