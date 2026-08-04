@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from math import factorial
+from typing import TypeAlias
 
 import numpy as np
 from numpy.typing import NDArray
 
-FloatArray = NDArray[np.float64]
+FloatArray: TypeAlias = NDArray[np.float64]
 
 
 def shapley_weight(n_features: int, coalition_size: int) -> float:
