@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
-from spatialshap._explanation import SpatialExplanation
+from spatialshap._explanation import FloatArray, SpatialExplanation
 from spatialshap.plots._summary import _plt
 
 
@@ -22,10 +22,10 @@ def _feature_index(explanation: SpatialExplanation, feature: str | int) -> int:
     return index
 
 
-def _require_geometry(explanation: SpatialExplanation) -> np.ndarray:
+def _require_geometry(explanation: SpatialExplanation) -> FloatArray:
     if explanation.geometry is None:
         raise ValueError("This plot requires geometry coordinates.")
-    return explanation.geometry
+    return cast(FloatArray, explanation.geometry)
 
 
 def effect_map(
