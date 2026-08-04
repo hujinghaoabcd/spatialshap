@@ -1,0 +1,16 @@
+site_name: SpatialSHAP
+site_description: Spatially conditioned Shapley explanations
+repo_url: https://github.com/hujinghaoabcd/spatialshap
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Theory: theory.md
+  - Limitations: limitations.md
+  - Roadmap: roadmap.md
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
