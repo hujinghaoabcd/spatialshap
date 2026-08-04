@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from types import MappingProxyType
-from typing import Any
+from typing import Any, TypeAlias
 
 import numpy as np
 import pandas as pd
@@ -13,7 +13,7 @@ from numpy.typing import NDArray
 
 from spatialshap._references import ReferenceDiagnostics
 
-FloatArray = NDArray[np.float64]
+FloatArray: TypeAlias = NDArray[np.float64]
 
 
 def _readonly_float_array(values: Any, *, ndim: int) -> FloatArray:
