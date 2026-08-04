@@ -80,7 +80,7 @@ Repository = "https://github.com/hujinghaoabcd/spatialshap"
 Issues = "https://github.com/hujinghaoabcd/spatialshap/issues"
 
 [tool.setuptools.dynamic]
-version = {attr = "spatialshap.__version__"}
+version = {attr = "spatialshap._version.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
