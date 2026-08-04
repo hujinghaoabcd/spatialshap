@@ -156,7 +156,7 @@ class SpatialExplanation:
             frame["geometry_y"] = self.geometry[:, 1]
         return frame
 
-    def to_geodataframe(self, *, crs: str | None = None):
+    def to_geodataframe(self, *, crs: str | None = None) -> Any:
         """Return a point GeoDataFrame when GeoPandas is installed."""
 
         if self.geometry is None:
