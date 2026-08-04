@@ -9,7 +9,7 @@ import numpy as np
 from spatialshap._explanation import SpatialExplanation
 
 
-def _plt():
+def _plt() -> Any:
     try:
         import matplotlib.pyplot as plt
     except ImportError as exc:  # pragma: no cover - optional dependency
@@ -24,7 +24,7 @@ def bar(
     *,
     max_display: int = 12,
     ax: Any | None = None,
-):
+) -> tuple[Any, Any]:
     """Plot ranked global mean absolute contributions."""
 
     if max_display <= 0:
@@ -47,7 +47,7 @@ def beeswarm(
     *,
     max_display: int = 12,
     ax: Any | None = None,
-):
+) -> tuple[Any, Any]:
     """Plot a deterministic beeswarm-style attribution summary."""
 
     if max_display <= 0:
