@@ -36,7 +36,7 @@ def exact_coalition_values(
 
     n_features = int(target.shape[0])
     n_coalitions = 1 << n_features
-    values = np.empty(n_coalitions, dtype=float)
+    values: FloatArray = np.empty(n_coalitions, dtype=float)
     for mask in range(n_coalitions):
         mixed = background.copy()
         for feature in range(n_features):
@@ -62,7 +62,7 @@ def exact_shapley_values(coalition_values: FloatArray, n_features: int) -> Float
         raise ValueError(
             f"coalition_values must have shape ({expected},) for {n_features} features."
         )
-    output = np.zeros(n_features, dtype=float)
+    output: FloatArray = np.zeros(n_features, dtype=float)
     for feature in range(n_features):
         bit = 1 << feature
         for mask in range(expected):
