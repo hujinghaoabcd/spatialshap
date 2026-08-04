@@ -15,7 +15,7 @@ def waterfall(
     *,
     max_display: int = 12,
     ax: Any | None = None,
-):
+) -> tuple[Any, Any]:
     """Plot one observation's additive reconstruction."""
 
     if explanation.shape[0] != 1:
