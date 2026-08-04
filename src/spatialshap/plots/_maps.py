@@ -33,7 +33,7 @@ def effect_map(
     *,
     feature: str | int,
     ax: Any | None = None,
-):
+) -> tuple[Any, Any]:
     """Map one feature's spatially conditioned contribution."""
 
     plt = _plt()
@@ -62,7 +62,7 @@ def baseline_map(
     explanation: SpatialExplanation,
     *,
     ax: Any | None = None,
-):
+) -> tuple[Any, Any]:
     """Map the location-specific reference prediction."""
 
     plt = _plt()
@@ -90,7 +90,7 @@ def effective_reference_map(
     explanation: SpatialExplanation,
     *,
     ax: Any | None = None,
-):
+) -> tuple[Any, Any]:
     """Map effective local background sample size."""
 
     plt = _plt()
