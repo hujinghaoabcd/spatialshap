@@ -243,7 +243,11 @@ def linear_reference_switch_truth(
         name="local_weights",
     )
     if global_weights is None:
-        global_weight = np.full(n_background, 1.0 / n_background, dtype=float)
+        global_weight: FloatArray = np.full(
+            n_background,
+            1.0 / n_background,
+            dtype=float,
+        )
     else:
         global_weight = _normalized_weights(
             global_weights,
@@ -331,11 +335,11 @@ def bandwidth_sensitivity(
             background_geometry=background_geometry,
             max_exact_features=max_exact_features,
         )(X, geometry=geometry)
-        effective = np.asarray(
+        effective: FloatArray = np.asarray(
             [item.effective_n for item in result.reference_diagnostics],
             dtype=float,
         )
-        equivalence = np.asarray(
+        equivalence: FloatArray = np.asarray(
             [
                 item.shapley_equivalence_error
                 for item in result.decomposition_diagnostics
