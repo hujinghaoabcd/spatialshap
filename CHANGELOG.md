@@ -14,8 +14,11 @@
 - add analytic linear and nonlinear additive reference-switch truth;
 - add component-level recovery metrics and estimated-versus-truth plots;
 - add explicit bandwidth sensitivity tables and a profile plot;
-- add conditional, geographic, validation, local, interaction, and spatial plots;
+- add SHAP-kernel coalition residual and feature-pair second-difference diagnostics
+  for nonadditive structure;
+- add conditional, geographic, validation, local, interaction, structural, and
+  spatial plots;
 - add mathematical-property, numerical, result, linear and nonlinear recovery,
-  validation, and plotting tests;
-- document the theory, analytic validation, interpretation boundary, limitations,
-  and staged roadmap.
+  nonadditive structure, validation, and plotting tests;
+- document the theory, analytic validation, structural adequacy, interpretation
+  boundary, limitations, and staged roadmap.
