@@ -8,6 +8,7 @@ nav:
   - Theory: theory.md
   - Validation: validation.md
   - Structure diagnostics: structure_diagnostics.md
+  - GeoShapley comparison: geoshapley_comparison.md
   - Limitations: limitations.md
   - Roadmap: roadmap.md
 plugins:
