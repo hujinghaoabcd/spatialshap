@@ -1,5 +1,9 @@
 """Public plotting interface for SpatialSHAP."""
 
+from spatialshap.plots._estimand import (
+    estimand_difference_map,
+    estimand_scatter,
+)
 from spatialshap.plots._geo import (
     component_bar,
     geo_effect_map,
@@ -28,4 +32,6 @@ __all__ = [
     "structure_diagnostic_map",
     "bandwidth_profile",
     "recovery_scatter",
+    "estimand_scatter",
+    "estimand_difference_map",
 ]
