@@ -18,12 +18,17 @@ IntArray: TypeAlias = NDArray[np.int_]
 
 @dataclass(frozen=True)
 class GeoDecompositionDiagnostics:
-    """Numerical diagnostics for one exact joint geographic decomposition."""
+    """Numerical and structural diagnostics for one geographic decomposition."""
 
     n_players: int
     n_coalitions: int
     design_rank: int
     condition_number: float
+    weighted_residual_rmse: float
+    relative_residual_norm: float
+    max_abs_coalition_residual: float
+    mean_abs_feature_pair_second_difference: float
+    max_abs_feature_pair_second_difference: float
     constraint_error: float
     shapley_equivalence_error: float
 
@@ -35,6 +40,17 @@ class GeoDecompositionDiagnostics:
             "decomposition_n_coalitions": self.n_coalitions,
             "decomposition_design_rank": self.design_rank,
             "decomposition_condition_number": self.condition_number,
+            "decomposition_weighted_residual_rmse": self.weighted_residual_rmse,
+            "decomposition_relative_residual_norm": self.relative_residual_norm,
+            "decomposition_max_abs_coalition_residual": (
+                self.max_abs_coalition_residual
+            ),
+            "decomposition_mean_abs_feature_pair_second_difference": (
+                self.mean_abs_feature_pair_second_difference
+            ),
+            "decomposition_max_abs_feature_pair_second_difference": (
+                self.max_abs_feature_pair_second_difference
+            ),
             "decomposition_constraint_error": self.constraint_error,
             "decomposition_shapley_equivalence_error": self.shapley_equivalence_error,
         }
@@ -128,6 +144,55 @@ def shapley_kernel_weight(n_players: int, coalition_size: int) -> float:
     )
 
 
+def feature_pair_second_differences(
+    coalition_values: FloatArray,
+    n_features: int,
+) -> FloatArray:
+    """Return exact second differences for every non-GEO feature pair and context.
+
+    For features ``j`` and ``k`` and a context coalition ``S`` excluding both,
+    the returned quantity is
+
+    ``v(S+j+k) - v(S+j) - v(S+k) + v(S)``.
+
+    Context coalitions may include GEO and any remaining features. A game composed
+    only of feature main effects, GEO main effect, and GEO-feature interactions has
+    zero values throughout this diagnostic.
+    """
+
+    if n_features <= 0:
+        raise ValueError("n_features must be positive.")
+    n_players = n_features + 1
+    expected = 1 << n_players
+    values: FloatArray = np.asarray(coalition_values, dtype=float)
+    if values.shape != (expected,):
+        raise ValueError(
+            f"coalition_values must have shape ({expected},) for {n_players} players."
+        )
+    if not np.isfinite(values).all():
+        raise ValueError("coalition_values must be finite.")
+    if n_features < 2:
+        return np.empty(0, dtype=float)
+
+    differences: list[float] = []
+    for first in range(n_features):
+        first_bit = 1 << first
+        for second in range(first + 1, n_features):
+            second_bit = 1 << second
+            pair_mask = first_bit | second_bit
+            for context in range(expected):
+                if context & pair_mask:
+                    continue
+                difference = (
+                    values[context | pair_mask]
+                    - values[context | first_bit]
+                    - values[context | second_bit]
+                    + values[context]
+                )
+                differences.append(float(difference))
+    return np.asarray(differences, dtype=float)
+
+
 def _geo_design_row(mask: int, n_features: int) -> FloatArray:
     row: FloatArray = np.zeros(2 * n_features + 1, dtype=float)
     geo_bit = 1 << n_features
@@ -151,6 +216,8 @@ def exact_geo_decomposition(
 
     Finite-coalition residuals use the SHAP kernel. Full-coalition efficiency is
     imposed as a hard equality constraint rather than an arbitrary large weight.
+    Residual and second-difference diagnostics expose game structure that the
+    four-component design cannot represent.
     """
 
     if n_features <= 0:
@@ -206,6 +273,32 @@ def exact_geo_decomposition(
         dtype=float,
     )
 
+    fitted_response: FloatArray = design @ coefficients
+    residuals: FloatArray = response - fitted_response
+    weight_total = float(weights.sum())
+    weighted_residual_rmse = float(
+        np.sqrt(np.dot(weights, np.square(residuals)) / weight_total)
+    )
+    weighted_response_rmse = float(
+        np.sqrt(np.dot(weights, np.square(response)) / weight_total)
+    )
+    epsilon = float(np.finfo(float).eps)
+    if weighted_response_rmse <= epsilon and weighted_residual_rmse <= epsilon:
+        relative_residual_norm = 0.0
+    else:
+        relative_residual_norm = float(
+            weighted_residual_rmse / max(weighted_response_rmse, epsilon)
+        )
+    max_abs_coalition_residual = float(np.max(np.abs(residuals)))
+
+    pair_differences = feature_pair_second_differences(values, n_features)
+    if pair_differences.size:
+        mean_abs_pair_difference = float(np.mean(np.abs(pair_differences)))
+        max_abs_pair_difference = float(np.max(np.abs(pair_differences)))
+    else:
+        mean_abs_pair_difference = 0.0
+        max_abs_pair_difference = 0.0
+
     ordinary: FloatArray = exact_shapley_values(values, n_players)
     redistributed: FloatArray = np.concatenate(
         [
@@ -227,6 +320,11 @@ def exact_geo_decomposition(
             np.linalg.matrix_rank(np.vstack([weighted_design, constraint]))
         ),
         condition_number=float(np.linalg.cond(kkt)),
+        weighted_residual_rmse=weighted_residual_rmse,
+        relative_residual_norm=relative_residual_norm,
+        max_abs_coalition_residual=max_abs_coalition_residual,
+        mean_abs_feature_pair_second_difference=mean_abs_pair_difference,
+        max_abs_feature_pair_second_difference=max_abs_pair_difference,
         constraint_error=constraint_error,
         shapley_equivalence_error=equivalence_error,
     )
