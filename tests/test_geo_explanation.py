@@ -39,14 +39,22 @@ def test_result_slicing_and_frame():
         "interaction__GEO__a",
         "shapley__a",
         "shapley__GEO",
+        "decomposition_weighted_residual_rmse",
+        "decomposition_relative_residual_norm",
+        "decomposition_max_abs_feature_pair_second_difference",
         "decomposition_constraint_error",
     }
     assert expected.issubset(frame.columns)
-    assert result.diagnostics().shape[0] == 3
+    diagnostics = result.diagnostics()
+    assert diagnostics.shape == (3, 12)
+    assert np.max(np.abs(diagnostics["decomposition_relative_residual_norm"])) < 1e-12
 
 
 def test_summary_and_component_table():
     result = make_result()
-    assert "GeoExplanation" in result.summary()
+    summary = result.summary()
+    assert "GeoExplanation" in summary
+    assert "max_relative_structure_residual" in summary
+    assert "max_feature_pair_second_difference" in summary
     assert list(result.mean_abs_components.index) == ["b", "a"]
     assert result.shapley_feature_names == ("a", "b", "GEO")

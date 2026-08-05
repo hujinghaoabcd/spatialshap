@@ -230,7 +230,7 @@ class GeoExplanation:
         return frame
 
     def diagnostics(self) -> pd.DataFrame:
-        """Return reference, constraint, and Shapley-equivalence diagnostics."""
+        """Return reference, numerical, and structural diagnostics."""
 
         columns = [
             "additivity_error",
@@ -238,6 +238,11 @@ class GeoExplanation:
             "reference_mean_distance",
             "reference_weight_concentration",
             "decomposition_condition_number",
+            "decomposition_weighted_residual_rmse",
+            "decomposition_relative_residual_norm",
+            "decomposition_max_abs_coalition_residual",
+            "decomposition_mean_abs_feature_pair_second_difference",
+            "decomposition_max_abs_feature_pair_second_difference",
             "decomposition_constraint_error",
             "decomposition_shapley_equivalence_error",
         ]
@@ -251,6 +256,14 @@ class GeoExplanation:
             item.shapley_equivalence_error
             for item in self.decomposition_diagnostics
         )
+        max_relative_residual = max(
+            item.relative_residual_norm
+            for item in self.decomposition_diagnostics
+        )
+        max_feature_pair_difference = max(
+            item.max_abs_feature_pair_second_difference
+            for item in self.decomposition_diagnostics
+        )
         geo_magnitude = float(np.mean(np.abs(self.geo_values)))
         ranked = self.mean_abs_components.to_string()
         return (
@@ -258,6 +271,8 @@ class GeoExplanation:
             f"n={self.shape[0]}, p={self.shape[1]}, "
             f"max_additivity_error={max_additivity:.3e}, "
             f"max_shapley_equivalence_error={max_equivalence:.3e}, "
+            f"max_relative_structure_residual={max_relative_residual:.3e}, "
+            f"max_feature_pair_second_difference={max_feature_pair_difference:.3e}, "
             f"mean_abs_geo_main={geo_magnitude:.3e})\n"
             f"Feature components:\n{ranked}"
         )

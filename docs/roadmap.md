@@ -34,13 +34,27 @@ Implemented:
 - explicit bandwidth sensitivity tables and plotting;
 - reproducible linear and nonlinear recovery examples and validation documentation.
 
+## Stage 2C — nonadditive structure diagnostics
+
+Implemented in the structure-diagnostics branch:
+
+- SHAP-kernel weighted intermediate-coalition residual RMSE;
+- residual norm relative to the coalition-response scale;
+- maximum absolute coalition residual;
+- exact non-GEO feature-pair second differences over all valid contexts;
+- mean and maximum feature-pair structural burden;
+- result-table, summary, map, example, tests, and interpretation documentation;
+- explicit separation of prediction reconstruction, ordinary-Shapley equivalence,
+  and restricted-basis structural adequacy.
+
 Remaining validation work:
 
-- nonadditive feature interactions and higher-order game structure;
 - conditional feature-dependence estimands under spatial confounding;
 - omitted spatial variables and biased sampling designs;
 - reproducible comparison against GeoShapley under matched background contracts;
 - kernel, KNN, background-size, and out-of-region transfer experiments;
+- decide whether a validated richer decomposition should expose explicit
+  feature-feature terms or retain them only as diagnostics;
 - manuscript-ready identifiability and estimand discussion.
 
 ## Stage 3 — inference and scalability

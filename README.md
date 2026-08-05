@@ -5,10 +5,11 @@ Shapley explanations. It makes the counterfactual reference population explicit
 and allows that population to vary by focal location.
 
 > **Status — 0.0.1 development:** the repository contains exact conditional and
-> joint geographic reference-switch explainers, analytic linear recovery targets,
-> component-level validation metrics, and bandwidth sensitivity diagnostics. The
-> exact algorithms remain numerical oracles before sampling, tree acceleration,
-> and uncertainty inference are introduced.
+> joint geographic reference-switch explainers, analytic linear and nonlinear
+> additive recovery targets, component-level validation, bandwidth sensitivity,
+> and diagnostics for nonadditive coalition structure. The exact algorithms remain
+> numerical oracles before sampling, tree acceleration, and uncertainty inference
+> are introduced.
 
 ## Two explanation contracts
 
@@ -77,9 +78,11 @@ background = pd.DataFrame(
 )
 background_coords = rng.uniform(0, 10, size=(40, 2))
 
+
 def predict(values):
     values = np.asarray(values)
     return 0.5 + 2.0 * values[:, 0] - values[:, 1]
+
 
 result = sshap.Explainer(
     predict,
@@ -98,14 +101,15 @@ print(result.to_frame())
 ## Joint GEO quick start
 
 ```python
+reference = sshap.KernelReference(
+    bandwidth=3.0,
+    kernel="gaussian",
+)
 geo_result = sshap.GeoExplainer(
     predict,
     background,
     background_geometry=background_coords,
-    reference=sshap.KernelReference(
-        bandwidth=3.0,
-        kernel="gaussian",
-    ),
+    reference=reference,
 )(background.iloc[:5], geometry=background_coords[:5])
 
 print(geo_result.summary())
@@ -119,8 +123,8 @@ joint_shapley = geo_result.shapley_values
 
 ## Analytic recovery validation
 
-For an additive linear prediction function, SpatialSHAP provides the exact
-reference-switch truth implied by global and local empirical means.
+For additive linear and nonlinear prediction functions, SpatialSHAP provides exact
+reference-switch truth implied by global and local empirical expectations.
 
 ```python
 local_weights = np.vstack(
@@ -156,6 +160,29 @@ profile = sshap.bandwidth_sensitivity(
 )
 ```
 
+## Nonadditive structure diagnostics
+
+The four-component design has no explicit feature–feature or higher-order terms.
+`GeoExplanation.diagnostics()` therefore reports whether intermediate coalitions
+are well represented by that restricted basis:
+
+```python
+structure = geo_result.diagnostics()[
+    [
+        "decomposition_weighted_residual_rmse",
+        "decomposition_relative_residual_norm",
+        "decomposition_max_abs_coalition_residual",
+        "decomposition_max_abs_feature_pair_second_difference",
+    ]
+]
+print(structure)
+```
+
+A small prediction additivity error and small ordinary-Shapley equivalence error do
+not guarantee that the four-component basis represents the full game. Material
+coalition residuals or feature-pair second differences indicate omitted
+nonadditive structure and limit component-level interpretation.
+
 ## Plotting
 
 ```python
@@ -170,6 +197,10 @@ fig, ax = plots.baseline_map(result)
 fig, ax = plots.component_bar(geo_result)
 fig, ax = plots.geo_effect_map(geo_result)
 fig, ax = plots.interaction_map(geo_result, feature="income")
+fig, ax = plots.structure_diagnostic_map(
+    geo_result,
+    metric="relative_residual_norm",
+)
 fig, ax = plots.bandwidth_profile(profile, log_x=True)
 ```
 
@@ -184,6 +215,8 @@ Plotting functions return Matplotlib objects and never call `plt.show()`.
 - per-observation checks of four-component additivity and ordinary Shapley
   equivalence;
 - analytic component-level recovery checks, not prediction reconstruction alone;
+- explicit coalition-residual and feature-pair diagnostics for restricted-basis
+  structural adequacy;
 - no silent coordinate projection, neighbour construction, or missing-value
   imputation;
 - unsupported model-output and geometry contracts are rejected explicitly;
@@ -200,10 +233,12 @@ Plotting functions return Matplotlib objects and never call `plt.show()`.
 - geometries are currently numeric coordinate pairs and distance is Euclidean;
 - no automatic coordinate transformation or bandwidth selection is performed;
 - no uncertainty interval or spatial-block bootstrap is included yet;
-- analytic truth currently covers the correctly specified additive linear
-  reference-switch game;
+- analytic truth covers correctly specified additive linear and nonlinear games;
+- nonadditive diagnostics reveal omitted structure but do not yet allocate a unique
+  feature–feature or higher-order contribution;
 - GEO and GEO–feature terms explain a fitted reference-switch game and are not
   automatically causal effects or spatially varying coefficients.
 
-Read `docs/theory.md`, `docs/validation.md`, `docs/limitations.md`, and
-`docs/roadmap.md` before treating any output as a scientific spatial effect.
+Read `docs/theory.md`, `docs/validation.md`, `docs/structure_diagnostics.md`,
+`docs/limitations.md`, and `docs/roadmap.md` before treating any output as a
+scientific spatial effect.
