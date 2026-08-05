@@ -12,6 +12,18 @@ from spatialshap.estimand_comparison import (
 )
 from spatialshap.plots._summary import _plt
 
+_FEATURE_COMPONENTS = {
+    "primary",
+    "geo_interaction",
+    "joint_feature_shapley",
+}
+_SCALAR_COMPONENTS = {
+    "baseline",
+    "geo_main",
+    "joint_geo_shapley",
+}
+_SUPPORTED_COMPONENTS = _FEATURE_COMPONENTS | _SCALAR_COMPONENTS
+
 
 def _feature_index(
     comparison: GeographicEstimandComparison,
@@ -36,6 +48,8 @@ def _component_values(
     component: str,
     feature: str | int | None,
 ) -> tuple[FloatArray, FloatArray, str]:
+    if component not in _SUPPORTED_COMPONENTS:
+        raise KeyError(component)
     coordinate = comparison.coordinate_group
     reference = comparison.reference_switch
     if component == "baseline":
@@ -62,13 +76,11 @@ def _component_values(
             reference.interaction_values[:, index],
             f"GEO interaction: {name}",
         )
-    if component == "joint_feature_shapley":
-        return (
-            coordinate.shapley_values[:, index],
-            reference.shapley_values[:, index],
-            f"Joint feature Shapley: {name}",
-        )
-    raise KeyError(component)
+    return (
+        coordinate.shapley_values[:, index],
+        reference.shapley_values[:, index],
+        f"Joint feature Shapley: {name}",
+    )
 
 
 def estimand_scatter(
