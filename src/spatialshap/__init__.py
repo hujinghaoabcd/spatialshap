@@ -19,6 +19,13 @@ from spatialshap.additive_validation import (
     AdditiveReferenceSwitchTruth,
     additive_reference_switch_truth,
 )
+from spatialshap.estimand_comparison import (
+    GeographicEstimandComparison,
+    GeographicGameComponents,
+    compare_geographic_estimands,
+    exact_coordinate_group_coalition_values,
+    exact_reference_switch_joint_coalition_values,
+)
 from spatialshap.validation import (
     LinearReferenceSwitchTruth,
     RecoveryMetrics,
@@ -37,6 +44,8 @@ __all__ = [
     "GeoExplainer",
     "GeoExplanation",
     "GeoDecompositionDiagnostics",
+    "GeographicGameComponents",
+    "GeographicEstimandComparison",
     "GlobalReference",
     "KernelReference",
     "KNNReference",
@@ -45,6 +54,9 @@ __all__ = [
     "LinearReferenceSwitchTruth",
     "AdditiveReferenceSwitchTruth",
     "feature_pair_second_differences",
+    "exact_coordinate_group_coalition_values",
+    "exact_reference_switch_joint_coalition_values",
+    "compare_geographic_estimands",
     "recovery_metrics",
     "linear_reference_switch_truth",
     "additive_reference_switch_truth",
