@@ -86,6 +86,70 @@ def interaction_map(
     return fig, ax
 
 
+def structure_diagnostic_map(
+    explanation: GeoExplanation,
+    *,
+    metric: str = "relative_residual_norm",
+    ax: Any | None = None,
+) -> tuple[Any, Any]:
+    """Map one coalition-structure diagnostic across focal observations."""
+
+    geometry = _require_geometry(explanation)
+    if metric == "weighted_residual_rmse":
+        values = np.asarray(
+            [item.weighted_residual_rmse for item in explanation.decomposition_diagnostics],
+            dtype=float,
+        )
+        label = "Weighted coalition residual RMSE"
+    elif metric == "relative_residual_norm":
+        values = np.asarray(
+            [item.relative_residual_norm for item in explanation.decomposition_diagnostics],
+            dtype=float,
+        )
+        label = "Relative coalition residual norm"
+    elif metric == "max_abs_coalition_residual":
+        values = np.asarray(
+            [
+                item.max_abs_coalition_residual
+                for item in explanation.decomposition_diagnostics
+            ],
+            dtype=float,
+        )
+        label = "Maximum absolute coalition residual"
+    elif metric == "max_abs_feature_pair_second_difference":
+        values = np.asarray(
+            [
+                item.max_abs_feature_pair_second_difference
+                for item in explanation.decomposition_diagnostics
+            ],
+            dtype=float,
+        )
+        label = "Maximum feature-pair second difference"
+    else:
+        raise KeyError(metric)
+
+    if not np.isfinite(values).all():
+        raise RuntimeError("Structural diagnostic values must be finite.")
+    plt = _plt()
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 6))
+    else:
+        fig = ax.figure
+    artist = ax.scatter(
+        geometry[:, 0],
+        geometry[:, 1],
+        c=values,
+        cmap="magma",
+        s=36,
+    )
+    fig.colorbar(artist, ax=ax, label=label)
+    ax.set_title(f"SpatialSHAP structure diagnostic: {metric}")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_aspect("equal", adjustable="datalim")
+    return fig, ax
+
+
 def component_bar(
     explanation: GeoExplanation,
     *,
