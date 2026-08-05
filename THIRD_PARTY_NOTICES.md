@@ -3,9 +3,15 @@
 SpatialSHAP is an independent implementation informed by the published Shapley,
 SHAP, Joint Shapley, and GeoShapley literature.
 
-The runtime scientific core does not call `shap` or `geoshapley`. Those packages
-may be used later in optional reference-comparison tests. No source code is copied
-from either project.
+The runtime scientific core does not call `shap` or `geoshapley`. The optional
+`benchmark` dependency installs `geoshapley==0.2.0.0` only to cross-check the
+independently implemented coordinate-group value function and component outputs.
+No GeoShapley source code is copied into SpatialSHAP, and the external package is
+not imported by the runtime API.
+
+The GeoShapley package is distributed under the MIT License and retains its own
+copyright and licence terms. Its transitive dependencies retain their respective
+licences.
 
 Initial theoretical references include:
 
