@@ -12,7 +12,7 @@ Implemented:
 
 ## Stage 2 — joint geographic decomposition
 
-Implemented in the development branch:
+Implemented:
 
 - explicit grouped GEO reference-switch player;
 - global-baseline feature primary contributions;
@@ -21,13 +21,24 @@ Implemented in the development branch:
 - exact recovery checks against the ordinary joint-game Shapley allocation;
 - immutable results, diagnostics, tabular export, maps, examples, and tests.
 
-Remaining Stage 2 validation work:
+## Stage 2B — scientific recovery and sensitivity
 
-- formal simulation experiments with known data-generating components;
+Implemented in the validation branch:
+
+- analytic four-component truth for additive linear reference-switch games;
+- component-level RMSE, MAE, maximum error, correlation, and sign agreement;
+- global-reference null, dummy-variable, and exact-recovery tests;
+- explicit bandwidth sensitivity tables and plotting;
+- reproducible recovery example and validation documentation.
+
+Remaining validation work:
+
+- nonlinear and discontinuous response surfaces;
+- correlated predictors and spatial confounding scenarios;
+- omitted spatial variables and biased sampling designs;
 - reproducible comparison against GeoShapley under matched background contracts;
-- sensitivity experiments for kernel, bandwidth, neighbour count, and reference
-  population;
-- manuscript-ready notation and identifiability discussion.
+- kernel, KNN, background-size, and out-of-region transfer experiments;
+- manuscript-ready identifiability and estimand discussion.
 
 ## Stage 3 — inference and scalability
 
