@@ -2,7 +2,10 @@
 
 from spatialshap._explainer import Explainer, explain
 from spatialshap._explanation import SpatialExplanation
-from spatialshap._geo_coalitions import GeoDecompositionDiagnostics
+from spatialshap._geo_coalitions import (
+    GeoDecompositionDiagnostics,
+    feature_pair_second_differences,
+)
 from spatialshap._geo_explainer import GeoExplainer, explain_geo
 from spatialshap._geo_explanation import GeoExplanation
 from spatialshap._references import (
@@ -41,6 +44,7 @@ __all__ = [
     "RecoveryMetrics",
     "LinearReferenceSwitchTruth",
     "AdditiveReferenceSwitchTruth",
+    "feature_pair_second_differences",
     "recovery_metrics",
     "linear_reference_switch_truth",
     "additive_reference_switch_truth",
