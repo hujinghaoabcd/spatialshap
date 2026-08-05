@@ -16,9 +16,14 @@
 - add explicit bandwidth sensitivity tables and a profile plot;
 - add SHAP-kernel coalition residual and feature-pair second-difference diagnostics
   for nonadditive structure;
-- add conditional, geographic, validation, local, interaction, structural, and
-  spatial plots;
+- add an exact matched comparison between coordinate-group GeoShapley and the
+  location-aware reference-switch estimand;
+- add component comparison tables, estimand scatter plots, and spatial difference
+  maps;
+- add a pinned external benchmark against `geoshapley==0.2.0.0`;
+- add conditional, geographic, validation, local, interaction, structural,
+  comparative, and spatial plots;
 - add mathematical-property, numerical, result, linear and nonlinear recovery,
-  nonadditive structure, validation, and plotting tests;
-- document the theory, analytic validation, structural adequacy, interpretation
-  boundary, limitations, and staged roadmap.
+  nonadditive structure, external equivalence, validation, and plotting tests;
+- document the theory, analytic validation, structural adequacy, GeoShapley
+  estimand distinction, interpretation boundary, limitations, and staged roadmap.
