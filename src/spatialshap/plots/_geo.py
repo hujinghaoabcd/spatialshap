@@ -96,7 +96,7 @@ def structure_diagnostic_map(
 
     geometry = _require_geometry(explanation)
     if metric == "weighted_residual_rmse":
-        values = np.asarray(
+        values: FloatArray = np.asarray(
             [item.weighted_residual_rmse for item in explanation.decomposition_diagnostics],
             dtype=float,
         )
