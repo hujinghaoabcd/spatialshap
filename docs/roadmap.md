@@ -23,18 +23,21 @@ Implemented:
 
 ## Stage 2B — scientific recovery and sensitivity
 
-Implemented in the validation branch:
+Implemented:
 
 - analytic four-component truth for additive linear reference-switch games;
+- analytic truth for smooth, threshold, and piecewise nonlinear additive models;
 - component-level RMSE, MAE, maximum error, correlation, and sign agreement;
-- global-reference null, dummy-variable, and exact-recovery tests;
+- estimated-versus-truth recovery plots;
+- global-reference null, dummy-variable, exact-recovery, and correlated-predictor
+  additive tests;
 - explicit bandwidth sensitivity tables and plotting;
-- reproducible recovery example and validation documentation.
+- reproducible linear and nonlinear recovery examples and validation documentation.
 
 Remaining validation work:
 
-- nonlinear and discontinuous response surfaces;
-- correlated predictors and spatial confounding scenarios;
+- nonadditive feature interactions and higher-order game structure;
+- conditional feature-dependence estimands under spatial confounding;
 - omitted spatial variables and biased sampling designs;
 - reproducible comparison against GeoShapley under matched background contracts;
 - kernel, KNN, background-size, and out-of-region transfer experiments;

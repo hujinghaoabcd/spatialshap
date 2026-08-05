@@ -12,6 +12,10 @@ from spatialshap._references import (
     ReferenceDiagnostics,
 )
 from spatialshap._version import __version__
+from spatialshap.additive_validation import (
+    AdditiveReferenceSwitchTruth,
+    additive_reference_switch_truth,
+)
 from spatialshap.validation import (
     LinearReferenceSwitchTruth,
     RecoveryMetrics,
@@ -36,8 +40,10 @@ __all__ = [
     "ReferenceDiagnostics",
     "RecoveryMetrics",
     "LinearReferenceSwitchTruth",
+    "AdditiveReferenceSwitchTruth",
     "recovery_metrics",
     "linear_reference_switch_truth",
+    "additive_reference_switch_truth",
     "geo_recovery_table",
     "bandwidth_sensitivity",
     "explain",

@@ -53,6 +53,53 @@ truth = spatialshap.linear_reference_switch_truth(
 )
 ```
 
+## Nonlinear additive truth
+
+The same derivation extends to
+
+\[
+f(x)=\alpha+\sum_{j=1}^{p}g_j(x_j),
+\]
+
+where each \(g_j\) can be smooth, thresholded, or piecewise. Let
+
+\[
+m_{g,j}=E_g[g_j(X_j)],
+\qquad
+m_{i,j}=E_i[g_j(X_j)].
+\]
+
+Then
+
+\[
+\phi^{primary}_{ij}=g_j(x_{ij})-m_{g,j},
+\]
+
+\[
+\phi^{GEO}_i=\sum_j(m_{i,j}-m_{g,j}),
+\]
+
+\[
+\phi^{GEO\times j}_{ij}=-(m_{i,j}-m_{g,j}).
+\]
+
+`additive_reference_switch_truth` evaluates these targets from a sequence of
+one-dimensional feature functions.
+
+```python
+truth = spatialshap.additive_reference_switch_truth(
+    X,
+    (lambda x: x**2, lambda x: np.where(x > 0, 1.0, -1.0)),
+    background=background,
+    local_weights=local_weights,
+    intercept=intercept,
+)
+```
+
+This permits exact tests with strongly correlated predictors because the fitted
+response remains additive. It does **not** resolve the broader distinction between
+interventional and conditional Shapley games under feature dependence.
+
 ## Recovery metrics
 
 `recovery_metrics` reports:
@@ -75,20 +122,33 @@ A manuscript should report component-level recovery rather than only a single
 aggregate score. A method can recover total predictions while allocating error to
 the wrong component.
 
+`plots.recovery_scatter` gives an observation-level estimated-versus-truth check:
+
+```python
+fig, ax = spatialshap.plots.recovery_scatter(
+    explanation,
+    truth,
+    component="geo_interaction",
+    feature="population_density",
+)
+```
+
 ## Null and dummy checks
 
 At minimum, simulation studies should include:
 
 1. **Global-reference null:** local and global weights are identical, so GEO main
    and all GEO interactions must be zero.
-2. **Dummy variable:** a coefficient is zero even though its spatial distribution
-   changes, so its primary and GEO interaction targets remain zero.
+2. **Dummy variable:** a coefficient or feature function is zero even though its
+   spatial distribution changes, so its primary and GEO interaction targets remain
+   zero.
 3. **Reference convergence:** as a continuous kernel bandwidth becomes very large,
    local weights approach global weights and geographic components should approach
    zero.
-4. **Exact recovery:** under a correctly specified additive linear function, all
-   four reported components should match their analytic targets to numerical
-   precision.
+4. **Linear exact recovery:** under a correctly specified additive linear function,
+   all four components should match analytic targets.
+5. **Nonlinear additive exact recovery:** smooth and threshold functions should also
+   match analytic targets when the prediction function is additive.
 
 ## Bandwidth sensitivity
 
@@ -125,8 +185,8 @@ The coordinate reference system and distance unit must be reported.
 
 ## Interpretation boundary
 
-The analytic target validates the reference-switch cooperative game implemented by
-SpatialSHAP. It does not establish that the recovered GEO term is a physical,
+The analytic targets validate the reference-switch cooperative game implemented by
+SpatialSHAP. They do not establish that the recovered GEO term is a physical,
 causal, or residual spatial effect. Later experiments must separately study model
-misspecification, correlated features, omitted spatial variables, spatial sampling
-bias, and out-of-region transfer.
+misspecification, nonadditive feature interactions, conditional feature dependence,
+omitted spatial variables, spatial sampling bias, and out-of-region transfer.

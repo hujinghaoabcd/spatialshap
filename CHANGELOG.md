@@ -11,10 +11,11 @@
 - add per-observation efficiency and ordinary joint-Shapley equivalence checks;
 - add immutable `GeoExplanation` results, diagnostics, tabular export, and optional
   GeoDataFrame conversion;
-- add analytic linear reference-switch truth and component-level recovery metrics;
+- add analytic linear and nonlinear additive reference-switch truth;
+- add component-level recovery metrics and estimated-versus-truth plots;
 - add explicit bandwidth sensitivity tables and a profile plot;
 - add conditional, geographic, validation, local, interaction, and spatial plots;
-- add mathematical-property, numerical, result, recovery, validation, and plotting
-  tests;
+- add mathematical-property, numerical, result, linear and nonlinear recovery,
+  validation, and plotting tests;
 - document the theory, analytic validation, interpretation boundary, limitations,
   and staged roadmap.
