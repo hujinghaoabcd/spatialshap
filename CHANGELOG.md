@@ -11,6 +11,10 @@
 - add per-observation efficiency and ordinary joint-Shapley equivalence checks;
 - add immutable `GeoExplanation` results, diagnostics, tabular export, and optional
   GeoDataFrame conversion;
-- add conditional and geographic summary, local, interaction, and spatial plots;
-- add mathematical-property, numerical, result, validation, and plotting tests;
-- document the theory, interpretation boundary, limitations, and staged roadmap.
+- add analytic linear reference-switch truth and component-level recovery metrics;
+- add explicit bandwidth sensitivity tables and a profile plot;
+- add conditional, geographic, validation, local, interaction, and spatial plots;
+- add mathematical-property, numerical, result, recovery, validation, and plotting
+  tests;
+- document the theory, analytic validation, interpretation boundary, limitations,
+  and staged roadmap.
