@@ -6,7 +6,12 @@ import pytest
 matplotlib.use("Agg")
 
 from spatialshap import GeoExplainer, GlobalReference
-from spatialshap.plots import component_bar, geo_effect_map, interaction_map
+from spatialshap.plots import (
+    component_bar,
+    geo_effect_map,
+    interaction_map,
+    structure_diagnostic_map,
+)
 
 
 def make_result(with_geometry=True):
@@ -31,6 +36,11 @@ def test_geo_plots_return_matplotlib_objects():
     for plotter, kwargs in [
         (geo_effect_map, {}),
         (interaction_map, {"feature": "a"}),
+        (structure_diagnostic_map, {}),
+        (
+            structure_diagnostic_map,
+            {"metric": "max_abs_feature_pair_second_difference"},
+        ),
         (component_bar, {}),
     ]:
         fig, ax = plotter(result, **kwargs)
@@ -42,8 +52,12 @@ def test_geo_maps_require_geometry_and_validate_feature():
     result = make_result(with_geometry=False)
     with pytest.raises(ValueError, match="requires geometry"):
         geo_effect_map(result)
+    with pytest.raises(ValueError, match="requires geometry"):
+        structure_diagnostic_map(result)
     result = make_result()
     with pytest.raises(KeyError):
         interaction_map(result, feature="missing")
+    with pytest.raises(KeyError):
+        structure_diagnostic_map(result, metric="missing")
     with pytest.raises(ValueError, match="positive"):
         component_bar(result, max_display=0)
