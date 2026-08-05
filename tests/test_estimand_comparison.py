@@ -107,7 +107,11 @@ def test_high_level_comparison_matches_linear_closed_form():
     assert isinstance(comparison, GeographicEstimandComparison)
     np.testing.assert_allclose(comparison.coordinate_group.primary_values, [[6.0]])
     np.testing.assert_allclose(comparison.coordinate_group.geo_values, [6.0])
-    np.testing.assert_allclose(comparison.coordinate_group.interaction_values, 0.0)
+    np.testing.assert_allclose(
+        comparison.coordinate_group.interaction_values,
+        0.0,
+        atol=1e-12,
+    )
     np.testing.assert_allclose(comparison.coordinate_group.base_values, [6.0])
     np.testing.assert_allclose(comparison.reference_switch.primary_values, [[6.0]])
     np.testing.assert_allclose(comparison.reference_switch.geo_values, [2.0])
@@ -118,8 +122,16 @@ def test_high_level_comparison_matches_linear_closed_form():
     np.testing.assert_allclose(comparison.reference_switch.base_values, [12.0])
     np.testing.assert_allclose(comparison.coordinate_group.predictions, [18.0])
     np.testing.assert_allclose(comparison.reference_switch.predictions, [18.0])
-    np.testing.assert_allclose(comparison.coordinate_group.additivity_error, 0.0)
-    np.testing.assert_allclose(comparison.reference_switch.additivity_error, 0.0)
+    np.testing.assert_allclose(
+        comparison.coordinate_group.additivity_error,
+        0.0,
+        atol=1e-12,
+    )
+    np.testing.assert_allclose(
+        comparison.reference_switch.additivity_error,
+        0.0,
+        atol=1e-12,
+    )
     assert comparison.coordinate_group.decomposition_diagnostics[
         0
     ].weighted_residual_rmse < 1e-12
@@ -159,7 +171,7 @@ def test_comparison_tables_summary_and_read_only_arrays():
 
 def test_estimand_comparison_validates_contracts():
     background = pd.DataFrame([[0.0], [2.0]], columns=["feature"])
-    with pytest.raises(ValueError, match="same feature count"):
+    with pytest.raises(ValueError, match="share a feature count"):
         compare_geographic_estimands(
             joint_linear,
             np.ones((1, 2)),
