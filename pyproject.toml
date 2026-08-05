@@ -66,6 +66,10 @@ docs = [
     "mkdocstrings[python]>=0.25.0",
     "pymdown-extensions>=10.8.0",
 ]
+benchmark = [
+    "geoshapley==0.2.0.0",
+    "matplotlib>=3.7.2",
+]
 all = [
     "matplotlib>=3.7.2",
     "geopandas>=0.14.4",

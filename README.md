@@ -7,9 +7,10 @@ and allows that population to vary by focal location.
 > **Status — 0.0.1 development:** the repository contains exact conditional and
 > joint geographic reference-switch explainers, analytic linear and nonlinear
 > additive recovery targets, component-level validation, bandwidth sensitivity,
-> and diagnostics for nonadditive coalition structure. The exact algorithms remain
-> numerical oracles before sampling, tree acceleration, and uncertainty inference
-> are introduced.
+> nonadditive coalition diagnostics, and a matched comparison with the original
+> coordinate-group GeoShapley estimand. The exact algorithms remain numerical
+> oracles before sampling, tree acceleration, and uncertainty inference are
+> introduced.
 
 ## Two explanation contracts
 
@@ -183,6 +184,57 @@ not guarantee that the four-component basis represents the full game. Material
 coalition residuals or feature-pair second differences indicate omitted
 nonadditive structure and limit component-level interpretation.
 
+## GeoShapley estimand comparison
+
+The original Kernel GeoShapley contract treats the coordinate columns as one
+joint model-input player. SpatialSHAP's joint explainer instead treats GEO as a
+switch from global to local reference weights. These are different cooperative
+games.
+
+`compare_geographic_estimands` evaluates both games on the same location-aware
+model, background sample, focal observations, and exact component basis:
+
+```python
+
+def predict_joint(values):
+    features = values[:, :2]
+    coordinates = values[:, 2:]
+    return (
+        0.5
+        + 2.0 * features[:, 0]
+        - features[:, 1]
+        + 0.1 * coordinates[:, 0]
+    )
+
+
+comparison = sshap.compare_geographic_estimands(
+    predict_joint,
+    background.iloc[:5],
+    background=background,
+    geometry=background_coords[:5],
+    background_geometry=background_coords,
+    reference=reference,
+)
+
+print(comparison.component_table())
+print(comparison.to_frame())
+```
+
+The compared games reconstruct the same full prediction but may have different
+baselines, GEO terms, and GEO–feature interactions. Difference columns are always
+`reference_switch - coordinate_group`.
+
+The coordinate-group oracle is independently cross-checked in CI against pinned
+`geoshapley==0.2.0.0`:
+
+```bash
+python -m pip install -e ".[benchmark]"
+python benchmarks/01_official_geoshapley_v020.py
+```
+
+GeoShapley remains an optional benchmark dependency and is not imported by the
+core package.
+
 ## Plotting
 
 ```python
@@ -202,6 +254,16 @@ fig, ax = plots.structure_diagnostic_map(
     metric="relative_residual_norm",
 )
 fig, ax = plots.bandwidth_profile(profile, log_x=True)
+
+fig, ax = plots.estimand_scatter(
+    comparison,
+    component="geo_main",
+)
+fig, ax = plots.estimand_difference_map(
+    comparison,
+    component="geo_interaction",
+    feature="income",
+)
 ```
 
 Plotting functions return Matplotlib objects and never call `plt.show()`.
@@ -217,6 +279,9 @@ Plotting functions return Matplotlib objects and never call `plt.show()`.
 - analytic component-level recovery checks, not prediction reconstruction alone;
 - explicit coalition-residual and feature-pair diagnostics for restricted-basis
   structural adequacy;
+- explicit separation of coordinate-group and reference-switch geographic
+  estimands;
+- pinned external cross-check against the official Kernel GeoShapley package;
 - no silent coordinate projection, neighbour construction, or missing-value
   imputation;
 - unsupported model-output and geometry contracts are rejected explicitly;
@@ -229,6 +294,7 @@ Plotting functions return Matplotlib objects and never call `plt.show()`.
   features;
 - joint GEO exact enumeration grows as \(2^{p+1}\) and defaults to at most 11
   non-geographic features;
+- exact matched estimand comparison defaults to at most 8 non-geographic features;
 - only single-output numeric prediction is supported;
 - geometries are currently numeric coordinate pairs and distance is Euclidean;
 - no automatic coordinate transformation or bandwidth selection is performed;
@@ -236,9 +302,11 @@ Plotting functions return Matplotlib objects and never call `plt.show()`.
 - analytic truth covers correctly specified additive linear and nonlinear games;
 - nonadditive diagnostics reveal omitted structure but do not yet allocate a unique
   feature–feature or higher-order contribution;
-- GEO and GEO–feature terms explain a fitted reference-switch game and are not
-  automatically causal effects or spatially varying coefficients.
+- coordinate-group and reference-switch differences are estimand differences, not
+  automatically evidence that either method is biased;
+- GEO and GEO–feature terms are not automatically causal effects or spatially
+  varying coefficients.
 
 Read `docs/theory.md`, `docs/validation.md`, `docs/structure_diagnostics.md`,
-`docs/limitations.md`, and `docs/roadmap.md` before treating any output as a
-scientific spatial effect.
+`docs/geoshapley_comparison.md`, `docs/limitations.md`, and `docs/roadmap.md` before
+treating any output as a scientific spatial effect.

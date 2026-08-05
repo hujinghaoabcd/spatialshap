@@ -36,7 +36,7 @@ Implemented:
 
 ## Stage 2C — nonadditive structure diagnostics
 
-Implemented in the structure-diagnostics branch:
+Implemented:
 
 - SHAP-kernel weighted intermediate-coalition residual RMSE;
 - residual norm relative to the coalition-response scale;
@@ -47,12 +47,28 @@ Implemented in the structure-diagnostics branch:
 - explicit separation of prediction reconstruction, ordinary-Shapley equivalence,
   and restricted-basis structural adequacy.
 
+## Stage 2D — GeoShapley estimand comparison
+
+Implemented in the comparison branch:
+
+- exact coordinate-group game matching the value function used by Kernel
+  GeoShapley;
+- exact location-aware reference-switch game on the same fitted model;
+- immutable paired decompositions with a shared full prediction;
+- component-level difference metrics and observation-level audit tables;
+- estimand scatter plots and spatial difference maps;
+- analytic cases separating direct coordinate effects from local compositional
+  effects;
+- pinned `geoshapley==0.2.0.0` external benchmark on Python 3.13;
+- explicit documentation of why the two GEO players answer different questions.
+
 Remaining validation work:
 
 - conditional feature-dependence estimands under spatial confounding;
 - omitted spatial variables and biased sampling designs;
-- reproducible comparison against GeoShapley under matched background contracts;
 - kernel, KNN, background-size, and out-of-region transfer experiments;
+- extend the official comparison to Tree GeoShapley without mixing its
+  tree-path-dependent value function with the empirical-background Kernel game;
 - decide whether a validated richer decomposition should expose explicit
   feature-feature terms or retain them only as diagnostics;
 - manuscript-ready identifiability and estimand discussion.
