@@ -8,6 +8,7 @@ from spatialshap.plots._maps import (
     effective_reference_map,
 )
 from spatialshap.plots._summary import bar, beeswarm
+from spatialshap.plots._validation import bandwidth_profile
 
 __all__ = [
     "bar",
@@ -19,4 +20,5 @@ __all__ = [
     "component_bar",
     "geo_effect_map",
     "interaction_map",
+    "bandwidth_profile",
 ]

@@ -6,6 +6,7 @@ theme:
 nav:
   - Home: index.md
   - Theory: theory.md
+  - Validation: validation.md
   - Limitations: limitations.md
   - Roadmap: roadmap.md
 plugins:
