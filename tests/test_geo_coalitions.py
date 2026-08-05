@@ -100,7 +100,11 @@ def test_represented_game_has_zero_structure_residuals():
     assert diagnostics.max_abs_coalition_residual < 1e-12
     assert diagnostics.mean_abs_feature_pair_second_difference < 1e-12
     assert diagnostics.max_abs_feature_pair_second_difference < 1e-12
-    np.testing.assert_allclose(feature_pair_second_differences(values, 3), 0.0)
+    np.testing.assert_allclose(
+        feature_pair_second_differences(values, 3),
+        0.0,
+        atol=1e-12,
+    )
 
 
 def test_feature_pair_term_is_exposed_as_unrepresented_structure():
